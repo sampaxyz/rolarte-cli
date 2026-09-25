@@ -12,7 +12,7 @@ var ErrProjectAlreadyExists = errors.New("project already exists")
 
 type Executor struct{}
 
-func New() Executor {
+func NewExecutor() Executor {
 	return Executor{}
 }
 
