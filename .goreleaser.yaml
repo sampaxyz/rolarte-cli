@@ -1,0 +1,72 @@
+version: 2
+
+project_name: rolarte
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: rolarte
+    main: ./cmd/rolarte
+    binary: rolarte
+
+    env:
+      - CGO_ENABLED=0
+
+    goos:
+      - darwin
+
+    goarch:
+      - amd64
+      - arm64
+
+    ldflags:
+      - -s -w
+      - -X github.com/sampaxyz/rolarte-cli/internal/version.Version={{.Version}}
+      - -X github.com/sampaxyz/rolarte-cli/internal/version.Commit={{.Commit}}
+      - -X github.com/sampaxyz/rolarte-cli/internal/version.Date={{.Date}}
+
+universal_binaries:
+  - id: rolarte-universal
+    ids:
+      - rolarte
+    replace: true
+    name_template: rolarte
+
+archives:
+  - id: rolarte
+    ids:
+      - rolarte-universal
+
+    formats:
+      - tar.gz
+
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      universal
+
+    files:
+      - README.md
+      - LICENSE*
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+
+release:
+  github:
+    owner: sampaxyz
+    name: rolarte-cli
