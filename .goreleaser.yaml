@@ -70,3 +70,25 @@ release:
   github:
     owner: sampaxyz
     name: rolarte-cli
+
+homebrew_casks:
+  - name: rolarte
+
+    ids:
+      - rolarte
+
+    repository:
+      owner: sampaxyz
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+
+    directory: Casks
+
+    homepage: "https://github.com/sampaxyz/rolarte-cli"
+
+    description: "Rolarte audiovisual production toolkit"
+
+    license: "MIT"
+
+    binaries:
+      - rolarte
