@@ -3,8 +3,6 @@ package cli
 import (
 	"fmt"
 	"path/filepath"
-	"strconv"
-	"strings"
 
 	"charm.land/huh/v2"
 	"github.com/sampaxyz/rolarte-cli/internal/config"
@@ -133,28 +131,9 @@ func runCreateClipForm(
 
 			huh.NewInput().
 				Title("Additional Clips").
-				Description(
-					"Number of new clips to create.",
-				).
+				Description("Number of new clips to create.").
 				Value(&countInput).
-				Validate(func(value string) error {
-					count, err := strconv.Atoi(
-						strings.TrimSpace(value),
-					)
-					if err != nil {
-						return fmt.Errorf(
-							"must be a number",
-						)
-					}
-
-					if count < 1 {
-						return fmt.Errorf(
-							"must be greater than zero",
-						)
-					}
-
-					return nil
-				}),
+				Validate(validatePositiveInt),
 		),
 	)
 
@@ -162,9 +141,7 @@ func runCreateClipForm(
 		return "", 0, err
 	}
 
-	count, err := strconv.Atoi(
-		strings.TrimSpace(countInput),
-	)
+	count, err := parseInt(countInput)
 	if err != nil {
 		return "", 0, err
 	}
@@ -177,48 +154,17 @@ func confirmClipPlan(
 	projectPath string,
 	plan project.ClipPlan,
 ) (bool, error) {
-	var builder strings.Builder
-
-	fmt.Fprintf(
-		&builder,
-		"Project: %s\n",
+	description := fmt.Sprintf(
+		"Project: %s\nLocation: %s",
 		projectName,
-	)
-
-	fmt.Fprintf(
-		&builder,
-		"Location: %s\n\n",
 		projectPath,
 	)
 
-	builder.WriteString("Directories:\n")
-
-	for _, directory := range plan.Directories {
-		fmt.Fprintf(
-			&builder,
-			"  • %s\n",
-			directory,
-		)
-	}
-
-	var confirmed bool
-
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewConfirm().
-				Title("Create these clips?").
-				Description(builder.String()).
-				Affirmative("Create").
-				Negative("Cancel").
-				Value(&confirmed),
-		),
+	return confirmDirectories(
+		"Create these clips?",
+		description,
+		plan.Directories,
 	)
-
-	if err := form.Run(); err != nil {
-		return false, err
-	}
-
-	return confirmed, nil
 }
 
 func init() {

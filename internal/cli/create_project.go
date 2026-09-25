@@ -2,8 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
+	"path/filepath"
 
 	"charm.land/huh/v2"
 	"github.com/sampaxyz/rolarte-cli/internal/config"
@@ -78,13 +77,7 @@ func runCreateProjectForm() (project.CreateRequest, error) {
 				Title("Project Name").
 				Description("Name of the new Rolarte System Project.").
 				Value(&projectName).
-				Validate(func(value string) error {
-					if strings.TrimSpace(value) == "" {
-						return fmt.Errorf("project name cannot be empty")
-					}
-
-					return nil
-				}),
+				Validate(validateRequired),
 
 			huh.NewMultiSelect[project.Subproject]().
 				Title("Subprojects").
@@ -121,18 +114,7 @@ func runCreateProjectForm() (project.CreateRequest, error) {
 				Title("Initial Clips").
 				Description("Number of clips to create initially.").
 				Value(&initialClipsInput).
-				Validate(func(value string) error {
-					count, err := strconv.Atoi(value)
-					if err != nil {
-						return fmt.Errorf("must be a number")
-					}
-
-					if count < 0 {
-						return fmt.Errorf("cannot be negative")
-					}
-
-					return nil
-				}),
+				Validate(validatePositiveInt),
 		),
 	)
 
@@ -140,10 +122,9 @@ func runCreateProjectForm() (project.CreateRequest, error) {
 		return project.CreateRequest{}, err
 	}
 
-	initialClips, err := strconv.Atoi(initialClipsInput)
+	initialClips, err := parseInt(initialClipsInput)
 	if err != nil {
-		return project.CreateRequest{},
-			fmt.Errorf("invalid clip count")
+		return project.CreateRequest{}, err
 	}
 
 	return project.CreateRequest{
@@ -157,49 +138,17 @@ func confirmProjectPlan(
 	basePath string,
 	plan project.Plan,
 ) (bool, error) {
-	var builder strings.Builder
-
-	fmt.Fprintf(
-		&builder,
-		"Project: %s\n",
+	description := fmt.Sprintf(
+		"Project: %s\nLocation: %s",
 		plan.Root,
+		filepath.Join(basePath, plan.Root),
 	)
 
-	fmt.Fprintf(
-		&builder,
-		"Location: %s/%s\n\n",
-		basePath,
-		plan.Root,
+	return confirmDirectories(
+		"Create this project?",
+		description,
+		plan.Directories,
 	)
-
-	builder.WriteString("Directories:\n")
-
-	for _, directory := range plan.Directories {
-		fmt.Fprintf(
-			&builder,
-			"  • %s\n",
-			directory,
-		)
-	}
-
-	var confirmed bool
-
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewConfirm().
-				Title("Create this project?").
-				Description(builder.String()).
-				Affirmative("Create").
-				Negative("Cancel").
-				Value(&confirmed),
-		),
-	)
-
-	if err := form.Run(); err != nil {
-		return false, err
-	}
-
-	return confirmed, nil
 }
 
 func init() {
