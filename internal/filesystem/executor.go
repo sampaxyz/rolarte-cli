@@ -2,6 +2,7 @@ package filesystem
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -41,4 +42,41 @@ func (Executor) Execute(
 	}
 
 	return rootPath, nil
+}
+
+func (Executor) ExecuteDirectories(
+	rootPath string,
+	directories []string,
+) error {
+	for _, directory := range directories {
+		path := filepath.Join(
+			rootPath,
+			directory,
+		)
+
+		if _, err := os.Stat(path); err == nil {
+			return fmt.Errorf(
+				"directory already exists: %s",
+				path,
+			)
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+	}
+
+	for _, directory := range directories {
+		path := filepath.Join(
+			rootPath,
+			directory,
+		)
+
+		if err := os.MkdirAll(
+			path,
+			0o755,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
