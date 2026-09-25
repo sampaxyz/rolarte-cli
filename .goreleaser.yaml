@@ -43,11 +43,7 @@ archives:
     formats:
       - tar.gz
 
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- .Version }}_
-      {{- .Os }}_
-      universal
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_universal"
 
     files:
       - README.md
