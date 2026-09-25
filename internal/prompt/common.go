@@ -1,4 +1,4 @@
-package cli
+package prompt
 
 import (
 	"fmt"
@@ -17,23 +17,29 @@ func validateRequired(value string) error {
 }
 
 func validatePositiveInt(value string) error {
-	number, err := strconv.Atoi(strings.TrimSpace(value))
+	number, err := strconv.Atoi(
+		strings.TrimSpace(value),
+	)
 	if err != nil {
 		return fmt.Errorf("must be a number")
 	}
 
 	if number < 1 {
-		return fmt.Errorf("must be greater than zero")
+		return fmt.Errorf(
+			"must be greater than zero",
+		)
 	}
 
 	return nil
 }
 
 func parseInt(value string) (int, error) {
-	return strconv.Atoi(strings.TrimSpace(value))
+	return strconv.Atoi(
+		strings.TrimSpace(value),
+	)
 }
 
-func confirmDirectories(
+func ConfirmDirectories(
 	title string,
 	description string,
 	directories []string,
