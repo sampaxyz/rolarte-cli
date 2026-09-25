@@ -1,32 +1,46 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# === GoLand / JetBrains IDE Settings ===
+# User-specific configuration (history, personal shelf, tabs, etc.)
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/shelf
+
+# Sensitive files / local storage
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/dataSources.ids
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+
+# CMake / Native build artifacts if you use CGO
+cmake-build-*/
+
+# (Optional) Uncomment the next line if you want to ignore ALL IDE settings.
+# However, JetBrains recommends sharing general project settings (like code style) with your team.
+# .idea/
+
+# === Go Language & Build Artifacts ===
+# Compiled binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Test binaries built via `go test -c`
 *.test
 
-# Code coverage profiles and other test artifacts
+# Code coverage profiles and test artifacts
 *.out
 coverage.*
 *.coverprofile
 profile.cov
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
+# Go workspace files (should usually be local to your machine)
 go.work
 go.work.sum
 
-# env file
+# Local environment variables
 .env
-
-# Editor/IDE
-# .idea/
-# .vscode/
+.env.*
