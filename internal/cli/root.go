@@ -1,11 +1,23 @@
 package cli
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/sampaxyz/rolarte-cli/internal/app"
+	"github.com/sampaxyz/rolarte-cli/internal/tui"
+	"github.com/spf13/cobra"
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "rolarte",
 	Short: "Rolarte audiovisual production toolkit",
-	Long:  `Rolarte CLI standardizes and automates audiovisual production workflows used by Rolarte.`,
+
+	RunE: func(
+		cmd *cobra.Command,
+		args []string,
+	) error {
+		return tui.Run(
+			app.New(),
+		)
+	},
 }
 
 func Execute() error {
