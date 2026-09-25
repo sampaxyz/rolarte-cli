@@ -11,8 +11,15 @@ A terminal toolkit for managing Rolarte audiovisual production workspaces.
 
 Built with Go, Bubble Tea, Lip Gloss, Cobra, GoReleaser and Homebrew.
 
+### TUI
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/sampaxyz/rolarte-cli/master/record-1.gif" alt="Rolarte CLI demo" width="500">
+</p>
+
+### CLI
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sampaxyz/rolarte-cli/master/record-2.gif" alt="Rolarte CLI demo" width="500">
 </p>
 
 ---
