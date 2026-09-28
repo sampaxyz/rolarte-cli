@@ -49,3 +49,13 @@ go.work.sum
 /dist/
 rolarte
 .rolarte/
+
+.idea/go.imports.xml
+
+.idea/jsonSchemas.xml
+
+.idea/modules.xml
+
+.idea/rolarte-cli.iml
+
+.idea/vcs.xml
